@@ -26,6 +26,9 @@ App.Collections.Units = Backbone.Collection.extend({
 		while (model = this.first()) {
 			model.destroy();
 		}
+	},
+	save: function() {
+		this.each(function(m) { m.save(); });
 	}
 });
 
@@ -150,6 +153,9 @@ App.Classifier = Backbone.Marionette.Controller.extend({
 			year2: this.year2.toJSON(),
 			year3: this.year3.toJSON()
 		});
+
+		this.year2.save();
+		this.year3.save();
 
 		console.log('done', results);
 
