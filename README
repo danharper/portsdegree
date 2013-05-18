@@ -1,1 +1,5 @@
-Use it at: https://danharper.github.io/portsdegree
+Use it at: http://danharper.github.io/portsdegree
+
+Saves data to localStorage instantly
+
+You can use the classifier itself without the UI, just see: js/classifier.js
