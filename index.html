@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+	<title>Portsmouth University Degree Classification Calculator</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+	<header>
+		<h1>University of Portsmouth Degree Classification Calculator</h1>
+	</header>
+
+	<div>
+		<div id="results">
+			Loading...
+		</div>
+	</div>
+
+	<section>
+		<div class="r2">
+			<h2>Year 2 Units</h2>
+			<div id="y2t">
+				Loading...
+			</div>
+		</div>
+
+		<div class="r3">
+			<h2>Year 3 Units</h2>
+			<div id="y3t">
+				Loading...
+			</div>
+		</div>
+	</section>
+
+	<footer>
+		<p><small>
+			by <a href="http://twitter.com/danharper7">Dan Harper</a>
+		</small></p>
+	</footer>
+
+
+	<script type="template" id="tUnitTableRow">
+		<td>
+			<input type="text" name="title">
+		</td>
+		<td>
+			<input type="number" min="0" max="40" step="5" name="credits">
+		</td>
+		<td>
+			<input type="number" min="0" max="100" name="grade">
+		</td>
+		<td><button class="removeUnit">[x]</button></td>
+	</script>
+
+	<script type="template" id="tUnitTable">
+		<div class="units-buttons">
+			<button class="addUnit">+ Add Unit</button>
+			<button class="removeUnits">x Remove Units</button>
+		</div>
+		<table>
+			<thead>
+				<tr>
+					<th>Unit</th>
+					<th>Credits</th>
+					<th>Grade (%)</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</script>
+
+	<script type="template" id="tResults">
+		<div class="results-button">
+			<button class="generateResults">Generate Results</button>
+		</div>
+
+		<div class="results-table">
+			<% if ( ! _.isEmpty(results)) { %>
+				<table>
+					<tr>
+						<td class="results-grade">
+							<%= results.grade %>
+							<br>
+							<small>(<%= results.result %>)</small>
+						</td>
+						<td class="results-meta">
+							Rule A: <%= results.details.ruleA %><br>
+							Rule B: <%= results.details.ruleB %><br>
+							Rule C: <%= results.details.ruleC %>
+						</td>
+					</tr>
+				</table>
+			<% } %>
+		</div>
+	</script>
+	
+	<script src="js/libs/jquery-2.0.0.js"></script>
+	<script src="js/libs/underscore.js"></script>
+	<script src="js/libs/backbone.js"></script>
+	<script src="js/libs/backbone.localStorage.js"></script>
+	<script src="js/libs/Backbone.ModelBinder.js"></script>
+	<script src="js/libs/backbone.marionette.js"></script>
+	<script src="js/classifier.js"></script>
+	<script src="js/app.js"></script>
+</body>
+</html>
