@@ -49,8 +49,8 @@ var portsmouthClassifier = (function() {
 		return grade;
 	};
 
+	// turn all units into 10-credit equivalents
 	var standardiseUnits = function(marks) {
-		// turn all units into 10-credit equivalents
 		var year = cloneYearMarks(marks);
 		var newMarks = [];
 
@@ -83,6 +83,30 @@ var portsmouthClassifier = (function() {
 
 	var removeWorst20Credits = function(marks) {
 		return marks.slice(0, -2);
+	};
+
+	var validateMarks = function(marks, error) {
+		error = error || function(msg) { throw new Error(msg); };
+		console.log('in', marks);
+
+		if ( ! (marks.year2.length && marks.year3.length)) {
+			error('Units must exist for both years 2 and 3');
+			return false;
+		}
+
+		var y2credits = totalCredits(marks.year2);
+		if (y2credits != 120) {
+			error('Year 2 must have 120 credits - it has '+y2credits);
+			return false;
+		}
+
+		var y3credits = totalCredits(marks.year3);
+		if (y3credits != 120) {
+			error('Year 3 must have 120 credits - it has '+y3credits);
+			return false;
+		}
+
+		return true;
 	};
 
 	var classifiers = {
@@ -126,29 +150,34 @@ var portsmouthClassifier = (function() {
 		}
 	};
 
+	var classify = function(marks, error) {
+		if ( ! validateMarks(marks, error)) return false;
+
+		var results = [
+			classifiers.ruleA(marks),
+			classifiers.ruleB(marks),
+			classifiers.ruleC(marks)
+		];
+
+		var result = _.first(_.sortBy(results, function(r) { return -r; }));
+
+		var grade = grader(result);
+
+		return {
+			grade: grade,
+			result: result+'%',
+			details: {
+				ruleA: results[0]+'%',
+				ruleB: results[1]+'%',
+				ruleC: results[2]+'%'
+			}
+		};
+	};
+
 	return {
 		totalCredits: totalCredits,
-		classify: function(marks) {
-			var results = [
-				classifiers.ruleA(marks),
-				classifiers.ruleB(marks),
-				classifiers.ruleC(marks)
-			];
-
-			var result = _.first(_.sortBy(results, function(r) { return -r; }));
-
-			var grade = grader(result);
-
-			return {
-				grade: grade,
-				result: result+'%',
-				details: {
-					ruleA: results[0]+'%',
-					ruleB: results[1]+'%',
-					ruleC: results[2]+'%'
-				}
-			};
-		}
+		classify: classify,
+		validate: validateMarks
 	};
 
 })();

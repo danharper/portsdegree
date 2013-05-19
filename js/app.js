@@ -125,34 +125,20 @@ App.Classifier = Backbone.Marionette.Controller.extend({
 		this.c = window.portsmouthClassifier;
 	},
 
-	validate: function(error) {
-		if ( ! (this.year2.length && this.year3.length)) {
-			error('Units must exist for both years 2 and 3');
-			return false;
-		}
-
-		var y2credits = this.c.totalCredits(this.year2.toJSON());
-		if (y2credits != 120) {
-			error('Year 2 must have 120 credits - it has '+y2credits);
-			return false;
-		}
-
-		var y3credits = this.c.totalCredits(this.year3.toJSON());
-		if (y3credits != 120) {
-			error('Year 3 must have 120 credits - it has '+y3credits);
-			return false;
-		}
-
-		return true;
-	},
-
 	classify: function(error) {
-		if ( ! this.validate(error)) return;
+		var results;
+		try {
+			results = this.c.classify({
+				year2: this.year2.toJSON(),
+				year3: this.year3.toJSON()
+			}, error);
+		}
+		catch (err) {
+			alert(err);
+			return false;
+		}
 
-		var results = this.c.classify({
-			year2: this.year2.toJSON(),
-			year3: this.year3.toJSON()
-		});
+		if (results === false) return;
 
 		this.year2.save();
 		this.year3.save();
