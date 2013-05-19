@@ -1,3 +1,7 @@
+.row {
+	max-width: 76.5em;
+}
+
 .top-bar .name h1 a {
 	width: auto;
 }
