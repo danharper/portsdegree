@@ -136,7 +136,7 @@ var portsmouthClassifier = (function() {
 
 			while (creditCount < 100) {
 				tempUnit = join[i];
-				creditCount += parseInt(tempUnit.credits);
+				creditCount += parseInt(tempUnit.credits, 10);
 				top100.push(tempUnit);
 				i++;
 			}
