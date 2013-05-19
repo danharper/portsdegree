@@ -49,66 +49,46 @@ var portsmouthClassifier = (function() {
 		return grade;
 	};
 
-	var removeWorst20Credits = {
-		// these two can be combined, but i'm too tired
-		year2: function(yearIn) {
-			var year = cloneYearMarks(yearIn);
-			year = _.initial(sortByGrade(year));
+	var standardiseUnits = function(marks) {
+		// turn all units into 10-credit equivalents
+		var year = cloneYearMarks(marks);
+		var newMarks = [];
 
-			// worst unit was 20 credits, we're done here
-			if (totalCredits(year) == 100) {
-				return year;
+		_.each(year, function(y) {
+			y.grade = parseInt(y.grade, 10);
+
+			if (y.credits == 10) {
+				newMarks.push(y);
 			}
-
-			// worst 2 units were each 10 credits, take em off
-			var lastUnit = _.last(year);
-			if (lastUnit.credits == 10) {
-				return _.initial(year);
+			else if (y.credits == 20) {
+				y.credits = 10;
+				newMarks.push(y);
+				newMarks.push(y);
 			}
-
-			// worst unit was 10 credit
-			// second worst was 20 credit - now worth just 10
-			year = _.initial(year);
-			lastUnit.credits = 10;
-
-			year.push(lastUnit);
-
-			var checkCredits = totalCredits(year);
-			if (checkCredits != 100) {
-				throw new Error('totalCredits is '+checkCredits+' not 100');
+			else if (y.credits == 40) {
+				y.credits = 10;
+				newMarks.push(y);
+				newMarks.push(y);
+				newMarks.push(y);
+				newMarks.push(y);
 			}
-
-			return year;
-		},
-		year3: function(yearIn) {
-			var year = cloneYearMarks(yearIn);
-			year = sortByGrade(year);
-			var lastUnit = _.last(year);
-			year = _.initial(year);
-
-			// worst unit was 20 credits
-			if (totalCredits(year) == 100) {
-				return year;
+			else {
+				throw new Error('Unknown number of credits: '+y.credits);
 			}
+		});
 
-			// worst unit was 40 credits
-			// it's now just worth 20
-			lastUnit.credits = 20;
-			year.push(lastUnit);
 
-			var checkCredits = totalCredits(year);
-			if (checkCredits != 100) {
-				throw new Error('totalCredits is '+checkCredits+' not 100');
-			}
+		return sortByGrade(newMarks).slice(0, -2);
+	};
 
-			return year;
-		}
+	var removeWorst20Credits = function(marks) {
+		return marks.slice(0, -2);
 	};
 
 	var classifiers = {
 		ruleA: function(grades) {
-			var y2 = removeWorst20Credits.year2(grades.year2);
-			var y3 = removeWorst20Credits.year3(grades.year3);
+			var y2 = removeWorst20Credits(standardiseUnits(grades.year2));
+			var y3 = removeWorst20Credits(standardiseUnits(grades.year3));
 
 			var meanY2 = sumGrades(y2) / y2.length;
 			var meanY3 = sumGrades(y3) / y3.length;
@@ -117,13 +97,13 @@ var portsmouthClassifier = (function() {
 		},
 
 		ruleB: function(grades) {
-			var y3 = removeWorst20Credits.year3(grades.year3);
+			var y3 = removeWorst20Credits(standardiseUnits(grades.year3));
 			return Math.round(sumGrades(y3) / y3.length);
 		},
 
 		ruleC: function(grades) {
-			var y2 = removeWorst20Credits.year2(grades.year2);
-			var y3 = removeWorst20Credits.year3(grades.year3);
+			var y2 = removeWorst20Credits(standardiseUnits(grades.year2));
+			var y3 = removeWorst20Credits(standardiseUnits(grades.year3));
 
 			// combine them & sort them
 			var join = sortByGrade(y2.concat(y3));
