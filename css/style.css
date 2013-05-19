@@ -18,3 +18,11 @@
 .results-meta {
 	font-size: .7em;
 }
+
+table input, table button {
+	margin-bottom: 0 !important;
+}
+
+.removeUnitCol {
+	width: 26px;
+}
