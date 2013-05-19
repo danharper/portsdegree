@@ -78,7 +78,7 @@ var portsmouthClassifier = (function() {
 		});
 
 
-		return sortByGrade(newMarks).slice(0, -2);
+		return sortByGrade(newMarks);
 	};
 
 	var removeWorst20Credits = function(marks) {
