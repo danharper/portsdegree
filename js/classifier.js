@@ -1,4 +1,3 @@
-
 /*
   run with:
   portsmouthClassifier.classify(marks);
@@ -26,28 +25,8 @@ var portsmouthClassifier = (function() {
 			return memo + parseInt(unit.grade, 10);
 		}, 0);
 	};
-
-	var grader = function(mark) {
-		var grade;
-
-		if (mark <= 39) {
-			grade = 'Fail';
-		}
-		else if (mark >= 40 && mark <= 49) {
-			grade = '3rd';
-		}
-		else if (mark >= 50 && mark <= 59) {
-			grade = '2:2';
-		}
-		else if (mark >= 60 && mark <= 69) {
-			grade = '2:1';
-		}
-		else if (mark >= 70) {
-			grade = '1st';
-		}
-
-		return grade;
-	};
+	
+	var grader = degreeGrader(mark);
 
 	// turn all units into 10-credit equivalents
 	var standardiseUnits = function(marks) {
@@ -146,7 +125,7 @@ var portsmouthClassifier = (function() {
 			}
 
 			// take bottom grade
-			return Math.round(_.last(top100).grade);
+			return degreeGrader(Math.round(_.last(top100).grade));
 		}
 	};
 
@@ -181,4 +160,25 @@ var portsmouthClassifier = (function() {
 	};
 
 })();
+function degreeGrader(mark){
+		var grade;
+
+		if (mark <= 39) {
+			grade = 'Fail';
+		}
+		else if (mark >= 40 && mark <= 49) {
+			grade = '3rd';
+		}
+		else if (mark >= 50 && mark <= 59) {
+			grade = '2:2';
+		}
+		else if (mark >= 60 && mark <= 69) {
+			grade = '2:1';
+		}
+		else if (mark >= 70) {
+			grade = '1st';
+		}
+
+		return grade;	
+	};
 
