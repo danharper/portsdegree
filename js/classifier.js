@@ -135,18 +135,18 @@ var portsmouthClassifier = (function() {
 			// grab 100 credits (top 50%) worth of units
 			var creditCount = 0,
 				i = 0,
-				top100 = [],
+				top120 = [],
 				tempUnit;
 
-			while (creditCount < 100) {
+			while (creditCount < 120) {
 				tempUnit = join[i];
 				creditCount += parseInt(tempUnit.credits, 10);
-				top100.push(tempUnit);
+				top120.push(tempUnit);
 				i++;
 			}
 
 			// take bottom grade
-			return Math.round(_.last(top100).grade);
+			return Math.round(_.last(top120).grade);
 		}
 	};
 
