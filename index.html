@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html ng-app="DegreeCalculator">
 <head>
 	<title>Portsmouth University Degree Classification Calculator</title>
 	<link rel="stylesheet" href="css/normalize.css">
@@ -33,16 +33,14 @@
 			padding: 10px 20px;
 			box-shadow: 1px 1px #eee;
 			">
-			<img src="https://dt8kf6553cww8.cloudfront.net/static/images/brand/vertical-vflBD8dfC.png" style="
-			float: left;
-			margin-right: 20px;
-			">
-			<p style="
-			margin-bottom: 0.7em;
-			"><strong>Don't lose your coursework.</strong></p><p style="
-			margin-bottom: .4em;
-			">Keep it in Dropbox, with 2GB of free space for life.</p>
-		</div></a>
+				<img src="https://dt8kf6553cww8.cloudfront.net/static/images/brand/vertical-vflBD8dfC.png" style="
+				float: left;
+				margin-right: 20px;
+				">
+				<p style="margin-bottom: 0.7em;"><strong>Don't lose your coursework.</strong></p>
+				<p style="margin-bottom: .4em;">Keep it in Dropbox, with 2.5GB of free space for life.</p>
+			</div>
+		</a>
 		<div class="large-6 small-12 columns" style="text-align: right;">
 			<div class="large-12 small-12 columns" style="
 			background: #FAFAFA;
@@ -51,40 +49,88 @@
 			padding: 10px 20px;
 			box-shadow: 1px 1px #eee;
 			">
-			<img src="https://dt8kf6553cww8.cloudfront.net/static/images/brand/vertical-vflBD8dfC.png" style="
+				<img src="https://dt8kf6553cww8.cloudfront.net/static/images/brand/vertical-vflBD8dfC.png" style="
 				float: left;
 				margin-right: 20px;
 				opacity: 0;
-			">
-			<p style="margin-bottom: 0.7em;"><strong>Updated for 2013-14.</strong></p>
-			<p style="margin-bottom: .4em;">Rules last updated October 24, 2013.</p>
+				">
+				<p style="margin-bottom: 0.7em;"><strong>Updated for 2013-14.</strong></p>
+				<p style="margin-bottom: .4em;">Rules last updated October 24, 2013.</p>
+			</div>
 		</div>
 	</div>
-</div>
 
-	<div class="row">
+	<div ng-controller="ResultsCtrl" class="row" ng-cloak>
 		<div>
 			<div id="results" class="row">
-				Loading...
+				<div class="results-table large-8 small-8 columns">
+					<table ng-if="results">
+						<tr>
+							<td class="results-grade">
+								{{ results.grade }}
+								<br>
+								<small>({{ results.result }})</small>
+							</td>
+							<td class="results-meta">
+								Rule A: {{ results.details.ruleA }}<br>
+								Rule B: {{ results.details.ruleB }}<br>
+								Rule C: {{ results.details.ruleC }}
+							</td>
+						</tr>
+					</table>
+					<div class="error" ng-if="!results">{{ classifierError }}</div>
+				</div>
+
+				<div class="results-button large-4 small-4 columns">
+					<button class="generateResults highlight right" disabled>
+						No Button!<br>
+						<small style="font-weight:normal;font-size:.9em;">Now Updates Automatically</small>
+					</button>
+					<div style="margin-top:10px;">
+						<div class="fb-share-button" data-href="http://code.danharper.me/portsdegree" data-type="button_count"></div>
+					</div>
+				</div>
 			</div>
 		</div>
 
 		<section class="row">
-			<div class="large-6 small-12 columns">
-				<h2>Year 2 Units</h2>
+			<div class="large-6 small-12 columns" ng-repeat="year in [2,3]">
+				<h2>Year {{ year }} Units</h2>
 				<div id="y2t">
-					Loading...
-				</div>
-			</div>
-
-			<div class="large-6 small-12 columns">
-				<h2>Year 3 Units</h2>
-				<div id="y3t">
-					Loading...
+					<div class="units-buttons">
+						<button ng-click="addUnit(year)" class="addUnit tiny secondary left">+ Add Unit</button>
+						<button ng-click="clearUnits(year)" class="removeUnits tiny secondary right">x Remove Units</button>
+					</div>
+					<table class="large-12 small-12">
+						<thead>
+							<tr>
+								<th>Unit</th>
+								<th>Credits</th>
+								<th>Grade (%)</th>
+								<th class="removeUnitCol"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="unit in units['year'+year]">
+								<td>
+									<input type="text" name="title" ng-model="unit.title">
+								</td>
+								<td>
+									<input type="number" min="0" max="40" step="10" name="credits" ng-model="unit.credits">
+								</td>
+								<td>
+									<input type="number" min="0" max="100" name="grade" ng-model="unit.grade">
+								</td>
+								<td><button class="removeUnit tiny alert" ng-click="removeUnit(year, unit)">x</button></td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</section>
+	</div>
 
+	<div class="row">
 		<footer>
 			<p><small>
 				by <a href="http://twitter.com/danharper7">Dan Harper</a>
@@ -95,75 +141,16 @@
 		</footer>
 	</div>
 
-
-	<script type="template" id="tUnitTableRow">
-		<td>
-			<input type="text" name="title">
-		</td>
-		<td>
-			<input type="number" min="0" max="40" step="10" name="credits">
-		</td>
-		<td>
-			<input type="number" min="0" max="100" name="grade">
-		</td>
-		<td><button class="removeUnit tiny alert">x</button></td>
-	</script>
-
-	<script type="template" id="tUnitTable">
-		<div class="units-buttons">
-			<button class="addUnit tiny secondary left">+ Add Unit</button>
-			<button class="removeUnits tiny secondary right">x Remove Units</button>
-		</div>
-		<table class="large-12 small-12">
-			<thead>
-				<tr>
-					<th>Unit</th>
-					<th>Credits</th>
-					<th>Grade (%)</th>
-					<th class="removeUnitCol"></th>
-				</tr>
-			</thead>
-			<tbody></tbody>
-		</table>
-	</script>
-
-	<script type="template" id="tResults">
-		<div class="results-table large-8 small-8 columns">
-			<% if ( ! _.isEmpty(results)) { %>
-				<table>
-					<tr>
-						<td class="results-grade">
-							<%= results.grade %>
-							<br>
-							<small>(<%= results.result %>)</small>
-						</td>
-						<td class="results-meta">
-							Rule A: <%= results.details.ruleA %><br>
-							Rule B: <%= results.details.ruleB %><br>
-							Rule C: <%= results.details.ruleC %>
-						</td>
-					</tr>
-				</table>
-			<% } else { %>
-			<% } %>
-		</div>
-
-		<div class="results-button large-4 small-4 columns">
-			<button class="generateResults highlight right">Generate Results</button>
-			<div style="margin-top:10px;">
-				<div class="fb-share-button" data-href="http://code.danharper.me/portsdegree" data-type="button_count"></div>
-			</div>
-		</div>
-	</script>
 	
-	<script src="js/libs/jquery-2.0.0.js"></script>
+	<!--<script src="js/libs/jquery-2.0.0.js"></script>-->
 	<script src="js/libs/underscore.js"></script>
-	<script src="js/libs/backbone.js"></script>
+	<!--<script src="js/libs/backbone.js"></script>
 	<script src="js/libs/backbone.localStorage.js"></script>
 	<script src="js/libs/Backbone.ModelBinder.js"></script>
-	<script src="js/libs/backbone.marionette.js"></script>
+	<script src="js/libs/backbone.marionette.js"></script>-->
 	<script src="js/classifier.js"></script>
-	<script src="js/app.js"></script>
+	<script src="bower_components/angular/angular.min.js"></script>
+	<script src="js/ngapp.js"></script>
 	
 	<script>
 		var _gaq=[['_setAccount','UA-5086243-1'],['_trackPageview']];
