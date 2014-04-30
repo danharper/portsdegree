@@ -87,7 +87,7 @@ var portsmouthClassifier = (function() {
 
 	var validateMarks = function(marks, error) {
 		error = error || function(msg) { throw new Error(msg); };
-		console.log('in', marks);
+		// console.log('in', marks);
 
 		if ( ! (marks.year2.length && marks.year3.length)) {
 			error('Units must exist for both years 2 and 3');
