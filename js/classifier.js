@@ -33,13 +33,13 @@ var portsmouthClassifier = (function() {
 		if (mark <= 39) {
 			grade = 'Fail';
 		}
-		else if (mark >= 40 && mark <= 49) {
+		else if (mark >= 40 && mark < 50) {
 			grade = '3rd';
 		}
-		else if (mark >= 50 && mark <= 59) {
+		else if (mark >= 50 && mark < 60) {
 			grade = '2:2';
 		}
-		else if (mark >= 60 && mark <= 69) {
+		else if (mark >= 60 && mark < 70) {
 			grade = '2:1';
 		}
 		else if (mark >= 70) {
