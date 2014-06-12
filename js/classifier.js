@@ -117,12 +117,12 @@ var portsmouthClassifier = (function() {
 			var meanY2 = sumGrades(y2) / y2.length;
 			var meanY3 = sumGrades(y3) / y3.length;
 
-			return Math.round((meanY2 / 100 * 40) + (meanY3 / 100 * 60));
+			return (meanY2 / 100 * 40) + (meanY3 / 100 * 60);
 		},
 
 		ruleB: function(grades) {
 			var y3 = removeWorst20Credits(standardiseUnits(grades.year3));
-			return Math.round(sumGrades(y3) / y3.length);
+			return sumGrades(y3) / y3.length;
 		},
 
 		ruleC: function(grades) {
@@ -146,7 +146,7 @@ var portsmouthClassifier = (function() {
 			}
 
 			// take bottom grade
-			return Math.round(_.last(top120).grade);
+			return _.last(top120).grade;
 		}
 	};
 
