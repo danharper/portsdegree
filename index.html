@@ -77,6 +77,11 @@
 								Rule C: {{ results.details.ruleC }}
 							</td>
 						</tr>
+						<tr ng-if="results.grade.borderline">
+							<td colspan="2" style="text-align: center;">
+								<em>Grade is borderline.</em>
+							</td>
+						</tr>
 					</table>
 					<div class="error" ng-if="!results">{{ classifierError }}</div>
 				</div>

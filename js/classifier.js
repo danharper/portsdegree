@@ -28,25 +28,40 @@ var portsmouthClassifier = (function() {
 	};
 
 	var grader = function(mark) {
-		var grade;
+		var grade, borderline = false;
 
 		if (mark <= 39) {
 			grade = 'Fail';
 		}
-		else if (mark >= 40 && mark < 50) {
+		else if (mark >= 40 && mark <= 49) {
 			grade = '3rd';
 		}
-		else if (mark >= 50 && mark < 60) {
+		else if (mark >= 49 && mark < 50) {
+			grade = '3rd or 2:2'
+			borderline = true;
+		}
+		else if (mark >= 50 && mark <= 59) {
 			grade = '2:2';
 		}
-		else if (mark >= 60 && mark < 70) {
+		else if (mark >= 59 && mark < 60) {
+			grade = '2:2 or 2:1';
+			borderline = true;
+		}
+		else if (mark >= 60 && mark <= 69) {
 			grade = '2:1';
+		}
+		else if (mark >= 69 && mark < 70) {
+			grade = '2:1 or 1st';
+			borderline = true;
 		}
 		else if (mark >= 70) {
 			grade = '1st';
 		}
 
-		return grade;
+		return {
+			grade: grade,
+			borderline: borderline
+		};
 	};
 
 	// turn all units into 10-credit equivalents
@@ -161,10 +176,11 @@ var portsmouthClassifier = (function() {
 
 		var result = _.first(_.sortBy(results, function(r) { return -r; }));
 
-		var grade = grader(result);
+		var graderResult = grader(result);
 
 		return {
-			grade: grade,
+			grade: graderResult.grade,
+			borderline: graderResult.borderline,
 			result: result+'%',
 			details: {
 				ruleA: results[0]+'%',
