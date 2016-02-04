@@ -147,7 +147,7 @@ var portsmouthClassifier = (function() {
 			// combine them & sort them
 			var join = sortByGrade(y2.concat(y3));
 
-			// grab 100 credits (top 50%) worth of units
+			// grab 120 credits (top 50%) worth of units
 			var creditCount = 0,
 				i = 0,
 				top120 = [],
