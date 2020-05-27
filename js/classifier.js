@@ -72,20 +72,13 @@ var portsmouthClassifier = (function() {
 		_.each(year, function(y) {
 			y.grade = parseInt(y.grade, 10);
 
-			if (y.credits == 10) {
-				newMarks.push(y);
-			}
-			else if (y.credits == 20) {
-				y.credits = 10;
-				newMarks.push(y);
-				newMarks.push(y);
-			}
-			else if (y.credits == 40) {
-				y.credits = 10;
-				newMarks.push(y);
-				newMarks.push(y);
-				newMarks.push(y);
-				newMarks.push(y);
+			//modification to allow for units worth 30 credits to
+			//be allowed and also compacted the code a little
+			//please note that units must be worth 10 - 40 in
+			//increments of 10.
+			if (y.credits % 10 == 0 && y.credits <= 40){
+				for(var i = 0; i < y.credits/10; i++)
+					newMarks.push(y);
 			}
 			else {
 				throw new Error('Unknown number of credits: '+y.credits);
